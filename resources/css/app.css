@@ -1,3 +1,106 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
+
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+ body {
+            background: #f8f9fa;
+        }
+
+        .wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background: #343a40;
+            color: #fff;
+            transition: all 0.3s;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+        }
+
+        #sidebar.active {
+            margin-left: -250px;
+        }
+
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #2c3136;
+        }
+
+        #sidebar ul.components {
+            padding: 20px 0;
+            border-bottom: 1px solid #4b545c;
+        }
+
+        #sidebar ul li a {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        #sidebar ul li a:hover {
+            background: #4b545c;
+        }
+
+        #sidebar ul li.active>a {
+            background: #0d6efd;
+        }
+
+        #content {
+            width: 100%;
+            margin-left: 250px;
+            transition: all 0.3s;
+            min-height: 100vh;
+        }
+
+        #content.active {
+            margin-left: 0;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+            }
+
+            #sidebar.active {
+                margin-left: 0;
+            }
+
+            #content {
+                margin-left: 0;
+            }
+
+            #content.active {
+                margin-left: 250px;
+            }
+        }
+
+        .navbar-custom {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+        }
+
+        .footer {
+            background: #fff;
+            padding: 15px 0;
+            border-top: 1px solid #dee2e6;
+            margin-top: auto;
+        }
+
+        .main-content {
+            padding: 20px;
+            min-height: calc(100vh - 130px);
+        }

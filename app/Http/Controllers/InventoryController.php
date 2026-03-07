@@ -17,10 +17,10 @@ class InventoryController extends Controller
         // Filter berdasarkan pencarian
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sku', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('sku', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -70,7 +70,39 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        return view('inventory.create');
+        return view('inventory.create', [
+            'title' => 'Tambah Item Inventory',
+            'item' => null
+        ]);
+    }
+
+    /**
+     * Menampilkan form edit item
+     */
+    public function edit($id, Inventory $inventory)
+    {
+        return view('inventory.create', [
+            'title' => 'Edit Item Inventory',
+            'item' => Inventory::findOrFail($id)
+        ]);
+        // $item = Inventory::findOrFail($id);
+        // return view ('Inventory.create', compact('item'));
+    }
+
+    // menghapus item (konfirmasi)
+    public function delete($id)
+    {
+        try {
+            $item = Inventory::findOrFail($id);
+            $item->delete();
+
+            return redirect()->route('inventory.index')
+                ->with('success', 'Item Inventory berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('inventory.index')
+                ->with('error', 'Gagal menghapus item inventory!');
+        }
+        // return view('inventory.delete', compact('item'));
     }
 
     /**
@@ -106,14 +138,6 @@ class InventoryController extends Controller
         return view('inventory.show', compact('item'));
     }
 
-    /**
-     * Menampilkan form edit item
-     */
-    public function edit($id)
-    {
-        $item = Inventory::findOrFail($id);
-        return view('inventory.edit', compact('item'));
-    }
 
     /**
      * Mengupdate data item
