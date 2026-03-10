@@ -23,8 +23,9 @@
                 <li class="nav-item"><a href="{{ route('inventory.create') }}"
                         class="nav-link {{ request()->routeIs('inventory.create') ? 'active' : '' }}">
                         <i class="bi bi-plus-circle"></i> Add Item</a></li>
-                <li><a href="{{ route('inventory.index') }}"
-                        class="nav-link{{ request()->routeIs('inventory.index') }}"><i class="bi bi-list">
+                <li class="nav-item"><a href="{{ route('inventory.index') }}"
+                        class="nav-link{{ request()->routeIs('inventory.index') ? 'active' : '' }}"><i
+                            class="bi bi-list">
                         </i> Item List</a></li>
                 <li><a href="#"><i class="bi bi-tags"></i> Categories</a></li>
                 <li><a href="#"><i class="bi bi-arrow-repeat"></i> Stock Opname</a></li>

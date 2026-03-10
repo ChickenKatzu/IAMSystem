@@ -186,232 +186,255 @@
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
-
-                                        {{-- add modal edit --}}
-                                        <div class="modal fade" id="editModal{{ $item->id }}" aria-hidden="true"
-                                            tabindex="-1">
-                                            <div class="modal-dialog modal-xl modal-lg modal-sm">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="editModal">Form Edit</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form>
-                                                            <div class="row">
-                                                                <div class="col-md-6 mb-3">
-                                                                    <label for="namae"
-                                                                        class="form-label">Nama</label>
-                                                                    <input type="text" class="form-control"
-                                                                        placeholder="Nama" name="names" id="name">
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <input type="password" class="form-control"
-                                                                        placeholder="Enter password" name="pswd">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6 mb-3">
-                                                                    <input type="text" class="form-control"
-                                                                        placeholder="Enter email" name="email">
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <input type="password" class="form-control"
-                                                                        placeholder="Enter password" name="pswd">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6 mb-3">
-                                                                    <input type="text" class="form-control"
-                                                                        placeholder="Enter email" name="email">
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <input type="password" class="form-control"
-                                                                        placeholder="Enter password" name="pswd">
-                                                                </div>
-                                                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                                    <button type="reset"
-                                                                        class="btn btn-secondary me-md-2">
-                                                                        <i class="bi bi-arrow-counterclockwise"></i> Reset
-                                                                    </button>
-                                                                    <button type="submit" class="btn btn-primary">
-                                                                        <i class="bi bi-save"></i> Simpan Item
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Delete Modal -->
-                                        <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                                        <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Apakah Anda yakin ingin menghapus item berikut?</p>
-                                                        <p>
-                                                            <strong>SKU:</strong> {{ $item->sku }}<br>
-                                                            <strong>Nama:</strong> {{ $item->name }}
-                                                        </p>
-                                                        <p class="text-danger">
-                                                            <i class="bi bi-exclamation-triangle"></i>
-                                                            Tindakan ini tidak dapat dibatalkan!
-                                                        </p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">
-                                                            <i class="bi bi-x"></i> Batal
-                                                        </button>
-                                                        <form action="{{ route('inventory.destroy', $item->id) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger">
-                                                                <i class="bi bi-trash"></i> Hapus
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-4">
-                                        <img src="https://via.placeholder.com/150?text=No+Data" alt="No Data"
-                                            class="mb-3" style="opacity: 0.5">
-                                        <h5 class="text-muted">Belum ada data inventory</h5>
-                                        <p class="text-muted">Klik tombol "Tambah Item Baru" untuk menambahkan data</p>
-                                        <a href="{{ route('inventory.create') }}" class="btn btn-primary">
-                                            <i class="bi bi-plus-circle"></i> Tambah Item Baru
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
                 </div>
-
-                <!-- Pagination -->
-                <div class="d-flex justify-content-center">
-                    {{-- <div class="text-muted small">
-                        Showing {{ $items->firstItem() }} to {{ $items->lastItem() }} of {{ $items->total() }} Result
+                </td>
+                </tr>
+                {{-- modal section --}}
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Apakah Anda yakin ingin menghapus item berikut?</p>
+                                <p>
+                                    <strong>SKU:</strong> {{ $item->sku }}<br>
+                                    <strong>Nama:</strong> {{ $item->name }}
+                                </p>
+                                <p class="text-danger">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    Tindakan ini tidak dapat dibatalkan!
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="bi bi-x"></i> Batal
+                                </button>
+                                <form action="{{ route('inventory.destroy', $item->id) }}" method="POST"
+                                    class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                {{-- add modal edit --}}
+                <div class="modal fade" id="editModal{{ $item->id }}" aria-hidden="true" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-lg modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModal">Form Edit</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="nama_item" class="form-label">Nama
+                                                Item</label>
+                                            <input type="text" class="form-control" placeholder="Nama Item"
+                                                name="nama_item" id="nama_item" value="{{ $item->name }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="kategori" class="form-label">Kategori</label>
+                                            {{-- <input type="text" class="form-control" placeholder="Kategori"
+                                                name="kategori" value=""> --}}
+                                            {{-- <select name="kategori" id="kategori" class="form-select">
+                                                <option>Pilih Kategori</option>
+                                                <option>{{ $item->category }}</option>
+                                            </select> --}}
+                                            <select class="form-select" name="kategori" id="kategori">
+                                                @php
+                                                    $categories = [
+                                                        'Elektronik' => 'Elektronik',
+                                                        'Furniture' => 'Furniture',
+                                                        'Stationary' => 'Stationary',
+                                                        'Lainnya' => 'Lainnya',
+                                                    ];
+                                                @endphp
+                                                @foreach ($categories as $value => $values)
+                                                    <option value="{{ $value }}"
+                                                        {{ old('kategori', $item->category) == $value ? 'selected' : '' }}>
+                                                        {{ $values }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="sku" class="form-label">SKU</label>
+                                            <input type="text" class="form-control" placeholder="SKU" name="sku"
+                                                value=" {{ $item->sku }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="quantity" class="form-label">Quantity</label>
+                                            <input type="number" class="form-control" placeholder="Quantity"
+                                                name="quantity" value="{{ $item->quantity }}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="harga" class="form-label">Harga</label>
+                                            <input type="harga" class="form-control" placeholder="Harga"
+                                                name="harga" value="{{ $item->price }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="supplier" class="form-label">Supplier</label>
+                                            <input type="text" class="form-control" placeholder="Supplier"
+                                                name="supplier" value="{{ $item->supplier }}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="deskripsi" class="form-label">Deskripsi</label>
+                                            <textarea name="deskripsi" placeholder="Deskripsi" id="deskripsi" cols="140" rows="5"
+                                                value="{{ $item->description }}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button type="reset" class="btn btn-secondary me-md-2">
+                                            <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-save"></i> Simpan Item
+                                        </button>
+                                    </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center py-4">
+                        <img src="https://via.placeholder.com/150?text=No+Data" alt="No Data" class="mb-3"
+                            style="opacity: 0.5">
+                        <h5 class="text-muted">Belum ada data inventory</h5>
+                        <p class="text-muted">Klik tombol "Tambah Item Baru" untuk menambahkan data</p>
+                        <a href="{{ route('inventory.create') }}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Tambah Item Baru
+                        </a>
+                    </td>
+                </tr>
+                @endforelse
+                </tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center">
+                <div class="text-muted small">
+                    Menampilkan {{ $items->firstItem() }} ke {{ $items->lastItem() }} dari {{ $items->total() }}
+                    Hasil
                     <nav>
-                        {{ $items->links() }}
-                    </nav> --}}
-                    <div class="text-muted small">
-                        Menampilkan {{ $items->firstItem() }} ke {{ $items->lastItem() }} dari {{ $items->total() }}
-                        Hasil
-                        <nav>
-                            <ul class="pagination pagination-sm-mb-0">
-                                <li class="page-item {{ $items->onFirstPage() ? 'disabled' : '' }}">
-                                    <a class="page-link" href="{{ $items->previousPageUrl() }}">&laquo;</a>
+                        <ul class="pagination pagination-sm-mb-0">
+                            <li class="page-item {{ $items->onFirstPage() ? 'disabled' : '' }}">
+                                <a class="page-link pagination-link" href="{{ $items->previousPageUrl() }}">&laquo;</a>
+                            </li>
+                            @foreach ($items->getUrlRange(1, $items->lastPage()) as $page => $url)
+                                <li class="page-item {{ $page == $items->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link pagination-link"
+                                        href="{{ $url }}">{{ $page }}</a>
                                 </li>
-                                @foreach ($items->getUrlRange(1, $items->lastPage()) as $page => $url)
-                                    <li class="page-item {{ $page == $items->currentPage() ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                    </li>
-                                @endforeach
-                                <li class="page-item {{ $items->onLastPage() ? 'disabled' : '' }}">
-                                    <a class="page-link" href="{{ $items->nextPageUrl() }}">&raquo;</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                            @endforeach
+                            <li class="page-item {{ $items->onLastPage() ? 'disabled' : '' }}">
+                                <a class="page-link pagination-link" href="{{ $items->nextPageUrl() }}">&raquo;</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Summary Cards -->
-        <div class="row">
-            {{-- total items --}}
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Total Item</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $totalItems ?? $items->total() }}
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-box-seam fa-2x text-gray-300"></i>
+
+    <!-- Summary Cards -->
+    <div class="row">
+        {{-- total items --}}
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Item</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ $totalItems ?? $items->total() }}
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            {{-- card total stock value --}}
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Total Nilai Inventory</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    Rp {{ number_format($totalValue ?? 0, 0, ',', '.') }}
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-cash-stack fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- card stock low --}}
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Low Stock Items</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $lowStockCount ?? 0 }}
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- card stock count --}}
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-danger shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    Out of Stock</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $outOfStockCount ?? 0 }}
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-x-octagon fa-2x text-gray-300"></i>
-                            </div>
+                        <div class="col-auto">
+                            <i class="bi bi-box-seam fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        {{-- card total stock value --}}
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Nilai Inventory</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                Rp {{ number_format($totalValue ?? 0, 0, ',', '.') }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-cash-stack fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- card stock low --}}
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Low Stock Items</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ $lowStockCount ?? 0 }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- card stock count --}}
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Out of Stock</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ $outOfStockCount ?? 0 }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-x-octagon fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 @endsection
 
@@ -429,5 +452,42 @@
                 $(this).remove();
             });
         }, 5000);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simpan posisi scroll sebelum meninggalkan halaman
+            const paginationLinks = document.querySelectorAll('.pagination-link');
+
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Simpan posisi scroll di sessionStorage
+                    sessionStorage.setItem('scrollPosition', window.scrollY);
+                    sessionStorage.setItem('currentUrl', window.location.href);
+
+                    // Navigasi ke halaman yang dituju
+                    window.location.href = this.href;
+                });
+            });
+
+            // Kembalikan ke posisi scroll yang disimpan
+            const savedPosition = sessionStorage.getItem('scrollPosition');
+            const savedUrl = sessionStorage.getItem('currentUrl');
+
+            if (savedPosition && savedUrl && savedUrl !== window.location.href) {
+                // Beri sedikit delay untuk memastikan halaman sudah selesai loading
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: parseInt(savedPosition),
+                        behavior: 'smooth' // Bisa diganti 'auto' jika tidak ingin efek smooth
+                    });
+
+                    // Hapus data setelah digunakan
+                    sessionStorage.removeItem('scrollPosition');
+                    sessionStorage.removeItem('currentUrl');
+                }, 100);
+            }
+        });
     </script>
 @endpush
