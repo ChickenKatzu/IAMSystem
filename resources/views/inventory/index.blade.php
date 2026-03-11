@@ -235,7 +235,9 @@
                                     aria-label="close"></button>
                             </div>
                             <div class="modal-body">
-                                <form>
+                                <form action="{{ route('inventory.updateInventory', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="nama_item" class="form-label">Nama
@@ -245,12 +247,6 @@
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="kategori" class="form-label">Kategori</label>
-                                            {{-- <input type="text" class="form-control" placeholder="Kategori"
-                                                name="kategori" value=""> --}}
-                                            {{-- <select name="kategori" id="kategori" class="form-select">
-                                                <option>Pilih Kategori</option>
-                                                <option>{{ $item->category }}</option>
-                                            </select> --}}
                                             <select class="form-select" name="kategori" id="kategori">
                                                 @php
                                                     $categories = [
@@ -284,7 +280,7 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="harga" class="form-label">Harga</label>
-                                            <input type="harga" class="form-control" placeholder="Harga"
+                                            <input type="number" class="form-control" placeholder="Harga"
                                                 name="harga" value="{{ $item->price }}">
                                         </div>
                                         <div class="col-md-6 mb-3">
@@ -297,7 +293,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="deskripsi" class="form-label">Deskripsi</label>
                                             <textarea name="deskripsi" placeholder="Deskripsi" id="deskripsi" cols="140" rows="5"
-                                                value="{{ $item->description }}"></textarea>
+                                                value="{{ $item->description }}">{{ $item->description }}</textarea>
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

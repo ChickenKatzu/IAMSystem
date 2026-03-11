@@ -220,7 +220,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Keterangan</label>
-                        <textarea class="form-control" name="notes" rows="2"></textarea>
+                        <textarea class="form-control" name="deskripsi" rows="2"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

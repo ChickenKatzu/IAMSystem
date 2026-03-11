@@ -89,6 +89,43 @@ class InventoryController extends Controller
         // return view ('Inventory.create', compact('item'));
     }
 
+    // update inventory
+    public function updateInventory(Request $request, $id)
+    {
+        $validasi = $request->validate([
+            'nama_item' => 'required|min:3|max:255',
+            'kategori' => 'required|in:Elektronik,Furniture,Stationery,Lainnya',
+            'sku' => 'required|max:50|unique:inventories,sku,' . $id,
+            'quantity' => 'required|integer|min:0',
+            'harga' => 'required|numeric|min:0',
+            'supplier' => 'nullable|max:255',
+            'deskripsi' => 'nullable|max:1000'
+        ]);
+
+        $item = Inventory::findOrFail($id);
+
+        // @dd([
+        //     'request_data' => $request->all(),
+        //     'item_sebelum_update' => $item->toArray(),
+        //     'validated_data' => $validasi,
+        //     'id' => $id
+        // ]);
+
+        $item->update([
+            'name' => $request->nama_item,
+            'category' => $request->kategori,
+            'sku' => $request->sku,
+            'quantity' => $request->quantity,
+            'price' => $request->harga,
+            'supplier' => $request->supplier,
+            'description' => $request->deskripsi
+        ]);
+
+
+        return redirect()->route('inventory.index')
+            ->with('success', 'Item Inventory berhasil diupdate!');
+    }
+
     // menghapus item (konfirmasi)
     public function delete($id)
     {
