@@ -77,7 +77,7 @@ class InventoryController extends Controller
     }
 
     /**
-     * Menampilkan form edit item
+     * Menampilkan form edit item modal di index (tanpa halaman terpisah)
      */
     public function edit($id, Inventory $inventory)
     {
@@ -89,7 +89,7 @@ class InventoryController extends Controller
         // return view ('Inventory.create', compact('item'));
     }
 
-    // update inventory
+    // update inventory modal di index (tanpa halaman terpisah)
     public function updateInventory(Request $request, $id)
     {
         $validasi = $request->validate([
@@ -173,6 +173,35 @@ class InventoryController extends Controller
     {
         $item = Inventory::findOrFail($id);
         return view('inventory.show', compact('item'));
+    }
+
+    public function kurangistockModal(Request $request, $id)
+    {
+      $validasi = $request->validate([
+        'quantity' => 'required|integer|min:1',
+        'deskripsi' => 'nullable|max:255'
+      ]);
+
+      $item = Inventory::findOrFail($id);
+      
+      if($item->quantity < $request->quantity){
+        return redirect()->route('inventory.index')
+            ->with('error', 'Gagal mengurangi stok! Stok tidak mencukupi.');
+      } else {
+        $item->quantity -= $request->quantity;
+        $item->save();
+
+        // Simpan log pengurangan stok (opsional)
+        // StockLog::create([
+        //     'inventory_id' => $id,
+        //     'change_type' => 'decrease',
+        //     'quantity' => $request->quantity,
+        //     'description' => $request->deskripsi
+        // ]);
+
+        return redirect()->route('inventory.index')
+            ->with('success', 'Stok berhasil dikurangi!');
+      }
     }
 
 

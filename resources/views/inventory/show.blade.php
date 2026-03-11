@@ -145,7 +145,7 @@
                         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addStockModal">
                             <i class="bi bi-plus-circle"></i> Tambah Stok
                         </button>
-                        <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#reduceStockModal">
+                        <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#kurangistockModal">
                             <i class="bi bi-dash-circle"></i> Kurangi Stok
                         </button>
                         <a href="#" class="btn btn-outline-info">
@@ -196,15 +196,16 @@
 </div>
 
 <!-- Reduce Stock Modal -->
-<div class="modal fade" id="reduceStockModal" tabindex="-1">
+<div class="modal fade" id="kurangistockModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Kurangi Stok</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="#" method="POST">
+            <form action="{{ route('inventory.kurangistockModal', $item->id) }}" method="POST">
                 @csrf
+                @method('PUT')
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Item</label>
