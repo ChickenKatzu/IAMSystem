@@ -166,7 +166,7 @@
                 <h5 class="modal-title">Tambah Stok</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="#" method="POST">
+            <form action="{{ route('inventory.tambahstockModal', $item->id) }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">

@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{id}/update', [InventoryController::class, 'updateInventory'])->name('updateInventory');
         Route::get('/{id}/delete', [InventoryController::class, 'delete'])->name('delete');
         Route::put('/{id}/kurangistockModal', [InventoryController::class, 'kurangistockModal'])->name('kurangistockModal');
+        Route::post('/{id}', [InventoryController::class, 'tambahstockModal'])->name('tambahstockModal');
     });
 
     // Asset Management Routes

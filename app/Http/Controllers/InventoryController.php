@@ -204,6 +204,29 @@ class InventoryController extends Controller
       }
     }
 
+    public function tambahstockModal(Request $request, $id)
+    {
+      $validasi = $request->validate([
+        'quantity' => 'required|integer|min:1',
+        'deskripsi' => 'nullable|max:255'
+      ]);
+
+      $item = Inventory::findOrFail($id);
+      $item->quantity += $request->quantity;
+      $item->save();
+
+      // Simpan log penambahan stok (opsional)
+      // StockLog::create([
+      //     'inventory_id' => $id,
+      //     'change_type' => 'increase',
+      //     'quantity' => $request->quantity,
+      //     'description' => $request->deskripsi
+      // ]);
+
+      return redirect()->route('inventory.index')
+          ->with('success', 'Stok berhasil ditambahkan!');
+    }
+
 
     /**
      * Mengupdate data item
