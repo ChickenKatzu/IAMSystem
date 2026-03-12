@@ -102,78 +102,152 @@
             <div class="col-xl-6 col-lg-6">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Inventory Status</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Inventory Status by Category</h6>
+                        <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Options:</div>
+                                <a class="dropdown-item" href="{{ route('inventory.index') }}">View All</a>
+                                <a class="dropdown-item" href="{{ route('inventory.create') }}">Add New Item</a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Category</th>
-                                        <th>Total Items</th>
-                                        <th>In Stock</th>
-                                        <th>Status</th>
+                                        <th class="text-center">Total Items</th>
+                                        <th class="text-center">In Stock</th>
+                                        <th class="text-center">Low Stock</th>
+                                        <th class="text-center">Out of Stock</th>
+                                        <th class="text-center">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Electronics</td>
-                                        <td>450</td>
-                                        <td>320</td>
-                                        <td><span class="badge bg-success">Good</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Furniture</td>
-                                        <td>280</td>
-                                        <td>210</td>
-                                        <td><span class="badge bg-success">Good</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Stationery</td>
-                                        <td>520</td>
-                                        <td>180</td>
-                                        <td><span class="badge bg-warning">Low Stock</span></td>
-                                    </tr>
+                                    @forelse($inventoryByCategory as $category)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @php
+                                                        $icons = [
+                                                            'Elektronik' => 'bi-phone',
+                                                            'Furniture' => 'bi-house',
+                                                            'Stationary' => 'bi-pencil',
+                                                            'Lainnya' => 'bi-grid',
+                                                        ];
+                                                        $icon = $icons[$category->category] ?? 'bi-tag';
+                                                    @endphp
+                                                    <i class="bi {{ $icon }} me-2 text-primary"></i>
+                                                    {{ $category->category }}
+                                                </div>
+                                            </td>
+                                            <td class="text-center fw-bold">{{ number_format($category->total_items) }}</td>
+                                            <td class="text-center text-success fw-bold">
+                                                {{ number_format($category->in_stock) }}</td>
+                                            <td class="text-center text-warning fw-bold">
+                                                {{ number_format($category->low_stock ?? 0) }}</td>
+                                            <td class="text-center text-danger fw-bold">
+                                                {{ number_format($category->out_of_stock ?? 0) }}</td>
+                                            <td class="text-center">
+                                                <span
+                                                    class="badge bg-{{ $category->status_class }} bg-opacity-25 text-{{ $category->status_class }} px-3 py-2">
+                                                    <i class="bi {{ $category->status_icon }} me-1"></i>
+                                                    {{ $category->status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4 text-muted">
+                                                <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                                                No inventory data available
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
+                                <tfoot class="table-light">
+                                    @php
+                                        $totalItems = $inventoryByCategory->sum('total_items');
+                                        $totalInStock = $inventoryByCategory->sum('in_stock');
+                                        $totalLowStock = $inventoryByCategory->sum('low_stock');
+                                        $totalOutOfStock = $inventoryByCategory->sum('out_of_stock');
+                                    @endphp
+                                    <tr>
+                                        <th class="text-end">Total:</th>
+                                        <th class="text-center">{{ number_format($totalItems) }}</th>
+                                        <th class="text-center">{{ number_format($totalInStock) }}</th>
+                                        <th class="text-center">{{ number_format($totalLowStock) }}</th>
+                                        <th class="text-center">{{ number_format($totalOutOfStock) }}</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
                             </table>
+                        </div>
+
+                        <!-- Mini Stats -->
+                        <div class="mt-4 d-flex justify-content-between align-items-center">
+                            <div class="small">
+                                <span class="text-success me-3">
+                                    <i class="bi bi-check-circle-fill"></i> Good
+                                </span>
+                                <span class="text-warning me-3">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Warning
+                                </span>
+                                <span class="text-danger me-3">
+                                    <i class="bi bi-x-octagon-fill"></i> Critical
+                                </span>
+                            </div>
+                            <div class="small text-muted">
+                                <i class="bi bi-arrow-repeat me-1"></i>
+                                Updated {{ now()->format('d M Y H:i') }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Activities -->
+            <!-- Right Column - You can add another chart/table here -->
             <div class="col-xl-6 col-lg-6">
+                <!-- Add another card here if needed -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
                     </div>
                     <div class="card-body">
-                        <div class="list-group">
-                            <div class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">New Item Added</h6>
-                                    <small>5 mins ago</small>
-                                </div>
-                                <p class="mb-1">Laptop Dell XPS 13 added to inventory</p>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{{ route('inventory.create') }}" class="btn btn-primary w-100 py-3">
+                                    <i class="bi bi-plus-circle d-block fs-4 mb-2"></i>
+                                    Add New Item
+                                </a>
                             </div>
-                            <div class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">Asset Maintenance</h6>
-                                    <small>2 hours ago</small>
-                                </div>
-                                <p class="mb-1">Printer HP LaserJet maintenance completed</p>
+                            <div class="col-6 mb-3">
+                                <a href="{{ route('inventory.index') }}" class="btn btn-success w-100 py-3">
+                                    <i class="bi bi-list-ul d-block fs-4 mb-2"></i>
+                                    View All Items
+                                </a>
                             </div>
-                            <div class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">Stock Update</h6>
-                                    <small>1 day ago</small>
-                                </div>
-                                <p class="mb-1">50 units of A4 paper added to stationery</p>
+                            <div class="col-6">
+                                <a href="#" class="btn btn-warning w-100 py-3">
+                                    <i class="bi bi-file-pdf d-block fs-4 mb-2"></i>
+                                    Export Report
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="#" class="btn btn-info w-100 py-3">
+                                    <i class="bi bi-graph-up d-block fs-4 mb-2"></i>
+                                    Analytics
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
