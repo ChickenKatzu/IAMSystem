@@ -33,6 +33,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/delete', [InventoryController::class, 'delete'])->name('delete');
         Route::put('/{id}/kurangistockModal', [InventoryController::class, 'kurangistockModal'])->name('kurangistockModal');
         Route::post('/{id}', [InventoryController::class, 'tambahstockModal'])->name('tambahstockModal');
+
+        // export routes
+        Route::get('/export/excel', [InventoryController::class, 'exportExcel'])->name('export.excel');
+        Route::get('/export/pdf', [InventoryController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('/print', [InventoryController::class, 'printView'])->name('print');
     });
 
     // Asset Management Routes

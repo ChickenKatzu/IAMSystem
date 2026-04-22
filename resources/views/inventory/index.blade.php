@@ -42,7 +42,8 @@
                             </option>
                             <option value="stationery" {{ request('category') == 'stationery' ? 'selected' : '' }}>
                                 Stationery</option>
-                            <option value="others" {{ request('category') == 'others' ? 'selected' : '' }}>Lainnya</option>
+                            <option value="lainnya" {{ request('category') == 'lainnya' ? 'selected' : '' }}>Lainnya
+                            </option>
                         </select>
                     </div>
 
@@ -77,7 +78,7 @@
                 <h6 class="m-0 font-weight-bold text-primary">
                     <i class="bi bi-table"></i> Data Inventory
                 </h6>
-                <div class="dropdown">
+                {{-- <div class="dropdown">
                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                         data-bs-toggle="dropdown">
                         <i class="bi bi-download"></i> Export
@@ -86,6 +87,30 @@
                         <li><a class="dropdown-item" href="#"><i class="bi bi-file-pdf"></i> PDF</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-file-excel"></i> Excel</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i> Print</a></li>
+                    </ul>
+                </div> --}}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown">
+                        <i class="bi bi-download"></i> Export
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('inventory.export.excel', request()->query()) }}">
+                                <i class="bi bi-file-excel text-success"></i> Export to Excel
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('inventory.export.pdf', request()->query()) }}">
+                                <i class="bi bi-file-pdf text-danger"></i> Export to PDF
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('inventory.print', request()->query()) }}"
+                                target="_blank">
+                                <i class="bi bi-printer text-primary"></i> Print
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -138,7 +163,7 @@
                                                 'elektronik' => ['label' => 'Elektronik', 'class' => 'info'],
                                                 'furniture' => ['label' => 'Furniture', 'class' => 'success'],
                                                 'stationery' => ['label' => 'Stationery', 'class' => 'warning'],
-                                                'others' => ['label' => 'Lainnya', 'class' => 'secondary'],
+                                                'lainnya' => ['label' => 'Lainnya', 'class' => 'secondary'],
                                             ];
                                             $category = $categoryLabels[$item->category] ?? [
                                                 'label' => ucfirst($item->category),

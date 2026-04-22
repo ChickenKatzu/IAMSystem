@@ -37,7 +37,7 @@
                                 <option value="elektronik">Elektronik</option>
                                 <option value="furniture">Furniture</option>
                                 <option value="stationery">Stationery</option>
-                                <option value="others">Lainnya</option>
+                                <option value="lainnya">Lainnya</option>
                             </select>
                             @error('category')
                                 <div class="invalid-feedback">{{ $message }}</div>
