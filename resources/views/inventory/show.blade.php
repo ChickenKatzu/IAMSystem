@@ -47,7 +47,7 @@
                                             'elektronik' => 'Elektronik',
                                             'furniture' => 'Furniture',
                                             'stationery' => 'Stationery',
-                                            'others' => 'Lainnya',
+                                            'lainnya' => 'Lainnya',
                                         ];
                                     @endphp
                                     <span class="badge bg-info">

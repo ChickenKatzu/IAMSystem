@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inventory;
+use Illuminate\Support\Facades\Log;
+use App\Exports\InventoryExport;
+use App\Exports\InventoryPDFExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class InventoryController extends Controller
 {
@@ -150,7 +156,7 @@ class InventoryController extends Controller
         // Validasi data
         $validated = $request->validate([
             'name' => 'required|min:3|max:255',
-            'category' => 'required|in:elektronik,furniture,stationery,others',
+            'category' => 'required|in:elektronik,furniture,stationery,lainnya',
             'sku' => 'required|unique:inventories,sku|max:50',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
@@ -177,54 +183,54 @@ class InventoryController extends Controller
 
     public function kurangistockModal(Request $request, $id)
     {
-      $validasi = $request->validate([
-        'quantity' => 'required|integer|min:1',
-        'deskripsi' => 'nullable|max:255'
-      ]);
+        $validasi = $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'deskripsi' => 'nullable|max:255'
+        ]);
 
-      $item = Inventory::findOrFail($id);
-      
-      if($item->quantity < $request->quantity){
-        return redirect()->route('inventory.index')
-            ->with('error', 'Gagal mengurangi stok! Stok tidak mencukupi.');
-      } else {
-        $item->quantity -= $request->quantity;
+        $item = Inventory::findOrFail($id);
+
+        if ($item->quantity < $request->quantity) {
+            return redirect()->route('inventory.index')
+                ->with('error', 'Gagal mengurangi stok! Stok tidak mencukupi.');
+        } else {
+            $item->quantity -= $request->quantity;
+            $item->save();
+
+            // Simpan log pengurangan stok (opsional)
+            // StockLog::create([
+            //     'inventory_id' => $id,
+            //     'change_type' => 'decrease',
+            //     'quantity' => $request->quantity,
+            //     'description' => $request->deskripsi
+            // ]);
+
+            return redirect()->route('inventory.index')
+                ->with('success', 'Stok berhasil dikurangi!');
+        }
+    }
+
+    public function tambahstockModal(Request $request, $id)
+    {
+        $validasi = $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'deskripsi' => 'nullable|max:255'
+        ]);
+
+        $item = Inventory::findOrFail($id);
+        $item->quantity += $request->quantity;
         $item->save();
 
-        // Simpan log pengurangan stok (opsional)
+        // Simpan log penambahan stok (opsional)
         // StockLog::create([
         //     'inventory_id' => $id,
-        //     'change_type' => 'decrease',
+        //     'change_type' => 'increase',
         //     'quantity' => $request->quantity,
         //     'description' => $request->deskripsi
         // ]);
 
         return redirect()->route('inventory.index')
-            ->with('success', 'Stok berhasil dikurangi!');
-      }
-    }
-
-    public function tambahstockModal(Request $request, $id)
-    {
-      $validasi = $request->validate([
-        'quantity' => 'required|integer|min:1',
-        'deskripsi' => 'nullable|max:255'
-      ]);
-
-      $item = Inventory::findOrFail($id);
-      $item->quantity += $request->quantity;
-      $item->save();
-
-      // Simpan log penambahan stok (opsional)
-      // StockLog::create([
-      //     'inventory_id' => $id,
-      //     'change_type' => 'increase',
-      //     'quantity' => $request->quantity,
-      //     'description' => $request->deskripsi
-      // ]);
-
-      return redirect()->route('inventory.index')
-          ->with('success', 'Stok berhasil ditambahkan!');
+            ->with('success', 'Stok berhasil ditambahkan!');
     }
 
 
@@ -237,7 +243,7 @@ class InventoryController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|min:3|max:255',
-            'category' => 'required|in:elektronik,furniture,stationery,others',
+            'category' => 'required|in:elektronik,furniture,stationery,lainnya',
             'sku' => 'required|max:50|unique:inventories,sku,' . $id,
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
@@ -266,5 +272,73 @@ class InventoryController extends Controller
             return redirect()->route('inventory.index')
                 ->with('error', 'Gagal menghapus item!');
         }
+    }
+
+    /**
+     * Export ke Excel
+     */
+    public function exportExcel(Request $request)
+    {
+        try {
+            $filters = [
+                'search' => $request->search,
+                'category' => $request->category,
+                'stock_status' => $request->stock_status,
+            ];
+
+            $export = new InventoryExport($filters);
+
+            return Excel::download($export, 'inventory-' . date('Y-m-d-His') . '.xlsx');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal export Excel: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Export ke PDF
+     */
+    public function exportPdf(Request $request)
+    {
+        try {
+            $export = new InventoryPDFExport([
+                'search' => $request->search,
+                'category' => $request->category,
+                'stock_status' => $request->stock_status,
+            ]);
+
+            $pdf = $export->generate();
+
+            return $pdf->download('inventory-' . date('Y-m-d-His') . '.pdf');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal export PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Print view
+     */
+    public function printView(Request $request)
+    {
+        $query = Inventory::query();
+
+        // Apply filters
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('sku', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category', $request->category);
+        }
+
+        $items = $query->get();
+        $totalValue = $items->sum(function ($item) {
+            return $item->quantity * $item->price;
+        });
+
+        return view('exports.inventory-print', compact('items', 'totalValue'));
     }
 }
