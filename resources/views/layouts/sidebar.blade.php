@@ -31,13 +31,15 @@
                 <li><a href="#"><i class="bi bi-arrow-repeat"></i> Stock Opname</a></li>
             </ul>
         </li>
+        <!-- Asset Management Menu -->
         <li>
-            <a href="#assetsSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <a href="#assetsSubmenu" data-bs-toggle="collapse"
+                aria-expanded="{{ request()->routeIs('assets.*') ? 'true' : 'false' }}" class="dropdown-toggle">
                 <i class="bi bi-building"></i> Asset Management
             </a>
-            <ul class="collapse list-unstyled" id="assetsSubmenu">
-                <li><a href="#"><i class="bi bi-plus-square"></i> Register Asset</a></li>
-                <li><a href="#"><i class="bi bi-grid-3x3"></i> Asset List</a></li>
+            <ul class="collapse list-unstyled {{ request()->routeIs('assets.*') ? 'show' : '' }}" id="assetsSubmenu">
+                <li><a href="{{ route('assets.create') }}"><i class="bi bi-plus-square"></i> Register Asset</a></li>
+                <li><a href="{{ route('assets.index') }}"><i class="bi bi-grid-3x3"></i> Asset List</a></li>
                 <li><a href="#"><i class="bi bi-tools"></i> Maintenance</a></li>
                 <li><a href="#"><i class="bi bi-arrow-left-right"></i> Asset Transfer</a></li>
                 <li><a href="#"><i class="bi bi-trash"></i> Disposal</a></li>

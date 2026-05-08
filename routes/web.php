@@ -38,7 +38,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/delete', [InventoryController::class, 'delete'])->name('delete');
         Route::put('/{id}/kurangistockModal', [InventoryController::class, 'kurangistockModal'])->name('kurangistockModal');
         Route::post('/{id}', [InventoryController::class, 'tambahstockModal'])->name('tambahstockModal');
-
     });
 
     // Asset Management Routes
@@ -46,6 +45,25 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [AssetController::class, 'index'])->name('index');
         Route::get('/create', [AssetController::class, 'create'])->name('create');
         Route::post('/', [AssetController::class, 'store'])->name('store');
-        // Add more asset routes
+        Route::get('/{id}', [AssetController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [AssetController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AssetController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AssetController::class, 'destroy'])->name('destroy');
+
+        // Export Routes
+        Route::get('/export/excel', [AssetController::class, 'exportExcel'])->name('export.excel');
+        Route::get('/export/pdf', [AssetController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('/print', [AssetController::class, 'print'])->name('print');
+
+        // Maintenance
+        Route::get('/{id}/maintenance', [AssetController::class, 'maintenance'])->name('maintenance');
+        Route::post('/{id}/maintenance', [AssetController::class, 'storeMaintenance'])->name('maintenance.store');
+
+        // Transfer
+        Route::get('/{id}/transfer', [AssetController::class, 'transfer'])->name('transfer');
+        Route::post('/{id}/transfer', [AssetController::class, 'storeTransfer'])->name('transfer.store');
+
+        // Disposal
+        Route::delete('/{id}/disposal', [AssetController::class, 'disposal'])->name('disposal');
     });
 });
